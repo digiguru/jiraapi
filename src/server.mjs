@@ -20,11 +20,7 @@ const requestHandler = async (request, response) => {
 		response.writeHead(200);
 		response.end();
 		return;
-	} else {
-    response.writeHead(200);
-    response.end(origin);
-    return;
-  }
+	} 
 
   console.log(request.url);
 
