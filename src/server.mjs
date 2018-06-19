@@ -6,19 +6,26 @@ import {isOriginAllowed} from './Http/CORs.mjs';
 const port = process.env.PORT || 4000;
 
 const requestHandler = async (request, response) => {
-  let origin = request.getHeader("Origin") || 'http://default';
+  let origin = request.headers.origin || 'http://default';
   
   //if (isOriginAllowed(origin)) {
   response.setHeader('Access-Control-Allow-Origin', origin);
   //}
 	response.setHeader('Access-Control-Request-Method', '*');
 	response.setHeader('Access-Control-Allow-Methods', 'OPTIONS, GET');
-	response.setHeader('Access-Control-Allow-Headers', '*');
-	if ( request.method === 'OPTIONS' ) {
+	response.setHeader('Access-Control-Allow-Headers', 'Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers');
+  
+  
+  if ( request.method === 'OPTIONS' ) {
 		response.writeHead(200);
 		response.end();
 		return;
-	}
+	} else {
+    response.writeHead(200);
+    response.writeBody(origin);
+    response.end();
+    return;
+  }
 
   console.log(request.url);
 
