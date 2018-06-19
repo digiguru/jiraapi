@@ -23,10 +23,24 @@ This is running already in the cloud:
 
 https://im-jira-api.herokuapp.com/
 
+If you want to debug this locally you will need a username and api token from Jira.
+
+To test it locally form a GET request in postman, or use this Curl statement:
+
+```
+curl -X GET \
+  http://localhost:4000/project/WED \
+  -H 'password: xxxxxxxxx' \
+  -H 'username: adam@hitched.co.uk'
+```
+
+(replacing the password and username as necessary)
+
 ## Tasklist
 - [x] Move to separate project
 - [x] Add CORs behaviour
-- [ ] Remove hardcoded login
+- [x] Remove hardcoded login
+- [ ] Return the JQL Query with data
 - [ ] Allow for dynamic JQL queries
 - [ ] Save queries offline
 

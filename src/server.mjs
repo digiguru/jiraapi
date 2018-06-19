@@ -6,7 +6,7 @@ import {isOriginAllowed} from './Http/CORs.mjs';
 const port = process.env.PORT || 4000;
 
 const requestHandler = async (request, response) => {
-  let origin = request.headers.origin || 'http://default';
+  const origin = request.headers.origin || 'http://default';
   
   //if (isOriginAllowed(origin)) {
   response.setHeader('Access-Control-Allow-Origin', origin);
@@ -32,28 +32,37 @@ const requestHandler = async (request, response) => {
   const path = dirs[1];
   const param = dirs[2];
   
+  const username = request.headers.username;
+  const password = request.headers.password;
+  
+
   const login = {
-    username: "adam@hitched.co.uk",
-    password: "HcRyQVSbNOQE74HADSe0A8A6"
-  }
+    username, 
+    password
+  };
   const dataLayer = new DataLayer(login);
 
-  console.log(`${login.username} in ${path} with ${param}`);
+  console.log(`${login.username} ${login.password} in ${path} with ${param}`);
   let data;
-  
-  if(path === "team") {
-    
-     data = await dataLayer.currentSprintForTeam(param);
-  } else if (path === "project") {
-     data = await dataLayer.currentSprintForProject(param);
-  } else if (path === "version") {
-     data = await dataLayer.version(param);
-  } else if (path === "sprint") {
-     data = await dataLayer.sprint(param);
-  } else {
-     response.end(`Ususual request. Must be team, project, version or sprint. Instead found ${path} in ${request.url}`);
+  try {
+    if(path === "team") {
+      data = await dataLayer.currentSprintForTeam(param);
+   } else if (path === "project") {
+      data = await dataLayer.currentSprintForProject(param);
+   } else if (path === "version") {
+      data = await dataLayer.version(param);
+   } else if (path === "sprint") {
+      data = await dataLayer.sprint(param);
+   } else {
+      response.end(`Ususual request. Must be team, project, version or sprint. Instead found ${path} in ${request.url}`);
+   }
+  } catch(err) {
+    response.end(`Error in call ${path} with ${param}: ${err}`);
+  } finally {
+    response.end(JSON.stringify(data));
   }
-  response.end(JSON.stringify(data));
+  
+  
 };
 
 const server = http.createServer(requestHandler);
