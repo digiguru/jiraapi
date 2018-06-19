@@ -22,8 +22,7 @@ const requestHandler = async (request, response) => {
 		return;
 	} else {
     response.writeHead(200);
-    response.writeBody(origin);
-    response.end();
+    response.end(origin);
     return;
   }
 
