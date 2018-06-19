@@ -6,10 +6,8 @@ import {isOriginAllowed} from './Http/CORs.mjs';
 const port = process.env.PORT || 4000;
 
 const requestHandler = async (request, response) => {
-  let origin = 'http://default'
-  if(request && request.header && request.header.origin) {
-    origin = request.header.origin;
-  }
+  let origin = request.getHeader("Origin") || 'http://default';
+  
   //if (isOriginAllowed(origin)) {
   response.setHeader('Access-Control-Allow-Origin', origin);
   //}
