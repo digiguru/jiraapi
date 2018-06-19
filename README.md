@@ -30,5 +30,7 @@ https://im-jira-api.herokuapp.com/
 - [ ] Allow for dynamic JQL queries
 - [ ] Save queries offline
 
+To push - git push heroku master
+
 
 

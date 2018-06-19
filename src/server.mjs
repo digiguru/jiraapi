@@ -10,9 +10,9 @@ const requestHandler = async (request, response) => {
   if(request && request.header && request.header.origin) {
     origin = request.header.origin;
   }
-  if (isOriginAllowed(origin)) {
-    response.setHeader('Access-Control-Allow-Origin', origin);
-  }
+  //if (isOriginAllowed(origin)) {
+  response.setHeader('Access-Control-Allow-Origin', origin);
+  //}
 	response.setHeader('Access-Control-Request-Method', '*');
 	response.setHeader('Access-Control-Allow-Methods', 'OPTIONS, GET');
 	response.setHeader('Access-Control-Allow-Headers', '*');
