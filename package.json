@@ -1,0 +1,36 @@
+{
+  "name": "tdd-workshop",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "express": "^4.16.3",
+    "jira-client": "^6.4.1",
+    "request": "^2.87.0"
+  },
+  "engines": {
+    "node": "10.4.1",
+    "npm": "6.1.0"
+  },
+  "jest": {
+    "verbose": true,
+    "moduleFileExtensions": ["js", "json", "jsx", "node", "mjs"],
+    "transform": {
+      "^.+\\.m?js$": "babel-jest"
+    }
+  },
+  "scripts": {
+    "start": "node --experimental-modules src/server.mjs",
+    "server": "node --experimental-modules src/server.mjs",
+    "server-watch": "nodemon -e mjs,js --experimental-modules src/server.mjs",
+    "test": "jest"
+  },
+  "proxy": "http://localhost:4000",
+  "devDependencies": {
+    "babel-core": "^6.26.3",
+    "babel-jest": "^23.0.1",
+    "babel-preset-env": "^1.7.0",
+    "jest": "^23.1.0",
+    "path": "^0.12.7",
+    "regenerator-runtime": "^0.11.1"
+  }
+}
