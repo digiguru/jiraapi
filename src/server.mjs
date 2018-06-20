@@ -3,7 +3,7 @@ import {DataLayer} from './JiraToDot/DataLayer';
 import {isOriginAllowed} from './Http/CORs.mjs';
 
 
-const port = process.env.PORT || 4000;
+const port = process.env.PORT || 4001;
 
 const requestHandler = async (request, response) => {
   const origin = request.headers.origin || 'http://default';
@@ -51,8 +51,10 @@ const requestHandler = async (request, response) => {
       data = await dataLayer.currentSprintForProject(param);
    } else if (path === "version") {
       data = await dataLayer.version(param);
-   } else if (path === "sprint") {
+    } else if (path === "sprint") {
       data = await dataLayer.sprint(param);
+    } else if (path === "epic") {
+      data = await dataLayer.epic(param);
    } else {
       response.end(`Ususual request. Must be team, project, version or sprint. Instead found ${path} in ${request.url}`);
    }

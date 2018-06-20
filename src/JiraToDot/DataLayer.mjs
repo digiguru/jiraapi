@@ -29,17 +29,20 @@ export class DataLayer {
         */
     }
     async currentSprintForTeam (team) {
-        return await this.search(`cf[13100] = ${team} and Sprint in openSprints() and type in standardIssueTypes()`);
+        return await this.search(`cf[13100] in (${team}) and Sprint in openSprints() and type in standardIssueTypes()`);
     }
     async currentSprintForProject (project) {
         console.log(`project ${project} - load it.`);
-        return await this.search(`project = ${project} and Sprint in openSprints() and type in standardIssueTypes()`);
+        return await this.search(`project in (${project}) and Sprint in openSprints() and type in standardIssueTypes()`);
     }
     async version (version) {
-        return await this.search(`'fix versions' = ${version} and type in standardIssueTypes()`);
+        return await this.search(`'fixVersions' in (${version}) and type in standardIssueTypes()`);
     }
     async sprint (sprint) {
-        return await this.search(`Sprint in ${sprint} and type in standardIssueTypes()`);
+        return await this.search(`Sprint in (${sprint}) and type in standardIssueTypes()`);
+    }
+    async epic (epic) {
+        return await this.search(`cf[11100] in (${epic}) and type in standardIssueTypes()`);
     }
     async search(jql) {
         console.log(jql);

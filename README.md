@@ -29,7 +29,7 @@ To test it locally form a GET request in postman, or use this Curl statement:
 
 ```
 curl -X GET \
-  http://localhost:4000/project/WED \
+  http://localhost:4001/project/WED \
   -H 'password: xxxxxxxxx' \
   -H 'username: adam@hitched.co.uk'
 ```
