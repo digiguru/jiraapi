@@ -46,6 +46,8 @@ export class DataLayer {
     }
     async search(jql) {
         console.log(jql);
-        return await this.jira.searchJira(jql);
+        return await this.jira.searchJira(jql, {
+            fields: ["*all","customfield_11100"]
+        });
     }
 }
