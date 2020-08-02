@@ -13,7 +13,13 @@
   },
   "jest": {
     "verbose": true,
-    "moduleFileExtensions": ["js", "json", "jsx", "node", "mjs"],
+    "moduleFileExtensions": [
+      "js",
+      "json",
+      "jsx",
+      "node",
+      "mjs"
+    ],
     "transform": {
       "^.+\\.m?js$": "babel-jest"
     }
@@ -22,7 +28,11 @@
     "start": "node --experimental-modules src/server.mjs",
     "server": "node --experimental-modules src/server.mjs",
     "server-watch": "nodemon -e mjs,js --experimental-modules src/server.mjs",
+    "test:ci": "jest --ci --reporters=jest-junit",
     "test": "jest"
+  },
+  "jest-junit": {
+    "outputDirectory": "results"
   },
   "proxy": "http://localhost:4000",
   "devDependencies": {
@@ -30,6 +40,7 @@
     "babel-jest": "^23.0.1",
     "babel-preset-env": "^1.7.0",
     "jest": "^23.1.0",
+    "jest-junit": "^11.1.0",
     "path": "^0.12.7",
     "regenerator-runtime": "^0.11.1"
   }
