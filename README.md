@@ -40,6 +40,8 @@ curl -X GET \
 - [x] Move to separate project
 - [x] Add CORs behaviour
 - [x] Remove hardcoded login
+- [x] Migrate code to github
+- [ ] Allow setup of a random git URL
 - [ ] Return the JQL Query with data
 - [ ] Allow for dynamic JQL queries
 - [ ] Save queries offline
