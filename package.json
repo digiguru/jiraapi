@@ -4,7 +4,7 @@
   "private": true,
   "dependencies": {
     "express": "^4.21.2",
-    "jira-client": "^6.4.1",
+    "jira-client": "^8.2.2",
     "request": "^2.88.2"
   },
   "engines": {
