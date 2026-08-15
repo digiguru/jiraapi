@@ -1,14 +1,16 @@
 export default [
   {
-    files: ['src/**/*.{js,mjs}', 'scripts/**/*.mjs'],
+    ignores: ['node_modules/**', '.vercel/**', 'results/**', 'coverage/**'],
+  },
+  {
+    files: ['**/*.{js,mjs}'],
     languageOptions: {
       ecmaVersion: 'latest',
       sourceType: 'module',
       globals: {
         console: 'readonly',
+        fetch: 'readonly',
         process: 'readonly',
-        setTimeout: 'readonly',
-        clearTimeout: 'readonly',
       },
     },
     linterOptions: {
@@ -24,17 +26,6 @@ export default [
       curly: ['error', 'all'],
       'no-var': 'error',
       'prefer-const': 'error',
-    },
-  },
-  {
-    files: ['**/*.test.{js,mjs}'],
-    languageOptions: {
-      globals: {
-        describe: 'readonly',
-        it: 'readonly',
-        expect: 'readonly',
-        jest: 'readonly',
-      },
     },
   },
 ];
