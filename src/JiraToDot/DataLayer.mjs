@@ -1,4 +1,4 @@
-import JiraApi from 'jira-client';
+import { JiraSearchClient } from './JiraSearchClient.mjs';
 
 export const DEFAULT_JIRA_HOST = 'immediateco.atlassian.net';
 
@@ -13,12 +13,10 @@ export class DataLayer {
   ) {
     this.jira =
       jiraClient ||
-      new JiraApi({
+      new JiraSearchClient({
         ...login,
-        protocol: 'https',
         host: jiraHost,
         apiVersion,
-        strictSSL: true,
       });
   }
 

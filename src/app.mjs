@@ -49,8 +49,9 @@ export function createApp({
   });
 
   app.use(async (request, response) => {
-    const requestPath = request.path;
-    const dirs = requestPath.split('/');
+    // Use the raw URL rather than Express's parsed path so the proxy keeps the
+    // exact URL-splitting behaviour of the original Node HTTP server.
+    const dirs = request.originalUrl.split('/');
 
     if (dirs.length !== 3 && dirs.length !== 4) {
       response.end(

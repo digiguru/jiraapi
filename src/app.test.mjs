@@ -122,6 +122,18 @@ describe('HTTP contract', () => {
     });
   });
 
+  it('preserves the original raw URL query-string behaviour', async () => {
+    const record = { calls: [], logins: [] };
+    const { body } = await requestApp('/project/WED?expand=true', {
+      dataLayerFactory: createFakeDataLayerFactory(record),
+    });
+
+    assert.deepEqual(JSON.parse(body), {
+      operation: 'currentSprintForProject',
+      param: 'WED?expand=true',
+    });
+  });
+
   it('preserves the invalid-path response', async () => {
     const { body, response } = await requestApp('/project');
 

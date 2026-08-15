@@ -6,7 +6,7 @@ A small compatibility proxy over Jira search queries. It keeps the original HTTP
 
 - Node.js 24
 - Express 5
-- native ES modules
+- native ES modules and native `fetch`
 - Node's built-in test runner
 - GitHub Actions for CI and production deployment
 - Vercel-compatible default Express export in `src/index.mjs`
@@ -72,7 +72,7 @@ The original Jira host remains the default so existing behaviour is unchanged:
 immediateco.atlassian.net
 ```
 
-Set `JIRA_HOST` to point the proxy at another Jira Cloud site without changing code. `JIRA_API_VERSION` defaults to `2` to retain the response contract used by the current `jira-client` integration.
+Set `JIRA_HOST` to point the proxy at another Jira Cloud site without changing code. `JIRA_API_VERSION` defaults to `2` so the current Jira search response contract is retained.
 
 The existing CORS origins are preserved in `src/Http/CORs.mjs`. Extra origins can be added at runtime using a comma-separated environment variable:
 
@@ -81,6 +81,12 @@ CORS_ALLOWED_ORIGINS=https://preview.example.com,https://app.example.com
 ```
 
 This is useful for Vercel preview or production frontends without having to commit deployment-specific domains.
+
+## Jira integration boundary
+
+The proxy now talks to Jira with Node's native `fetch`, so there is no legacy Jira/request HTTP client dependency in the runtime. `src/JiraToDot/JiraSearchClient.mjs` owns that transport and `DataLayer` owns the JQL construction.
+
+For contract compatibility the transport still calls Jira's existing `/rest/api/2/search` endpoint and passes its JSON response through unchanged. Atlassian is replacing that endpoint with enhanced JQL search, whose pagination metadata differs. Moving to the enhanced endpoint should therefore be an explicit contract migration rather than silently changing callers during this Vercel move.
 
 ## Testing and CI
 
@@ -91,7 +97,7 @@ Every pull request, push to `master`, and manual CI run executes:
 3. the complete Node test suite
 4. a build/startup check that loads the Vercel entrypoint and calls `/health`
 
-The tests cover the Jira JQL construction plus the legacy HTTP contract, including credentials headers, CORS, error text, trailing path behaviour, and every supported route.
+The tests cover the native Jira transport, Jira JQL construction, and the legacy HTTP contract, including credentials headers, CORS, errors, raw query-string/path behaviour, trailing path behaviour, and every supported route.
 
 Dependabot groups npm dependency updates and GitHub Actions updates into manageable weekly PRs.
 
@@ -120,7 +126,3 @@ vercel deploy --prebuilt --prod
 Until the secrets are configured, the production deployment job exits successfully with a notice rather than breaking CI.
 
 If the Vercel project is also connected directly to GitHub for automatic Git deployments, choose one deployment path as the source of truth to avoid duplicate production deployments. This repository is configured for GitHub Actions to own the production release.
-
-## Maintenance boundary
-
-`jira-client` 8.2.2 is deliberately retained for now even though it is old. Existing clients may depend on the pagination and response shape from Jira's legacy search API, while Atlassian's enhanced JQL search API returns different pagination metadata. The library is isolated behind `DataLayer`, making a later Jira API migration possible once that response contract has explicit migration requirements.
