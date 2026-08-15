@@ -10,6 +10,9 @@
 # production
 /build
 
+# Vercel local project metadata
+.vercel
+
 # misc
 .DS_Store
 .env.local

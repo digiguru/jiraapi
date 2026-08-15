@@ -1,30 +1,35 @@
-import { isOriginAllowed } from './CORs.mjs';
+import assert from 'node:assert/strict';
+import { describe, it } from 'node:test';
+import {
+  DEFAULT_ALLOWED_ORIGINS,
+  getAllowedOrigins,
+  isOriginAllowed,
+} from './CORs.mjs';
 
 describe('Allowed origins', () => {
-  const passingOrigins = [
-    'http://localhost',
-    'http://localhost:4000',
-    'https://localhost',
-    'https://localhost:4000',
-    'http://im-jira-import.herokuapp.com',
-    'https://im-jira-import.herokuapp.com',
-  ];
-
-  for (const origin of passingOrigins) {
+  for (const origin of DEFAULT_ALLOWED_ORIGINS) {
     it(`allows ${origin}`, () => {
-      expect(isOriginAllowed(origin)).toBe(true);
+      assert.equal(isOriginAllowed(origin), true);
     });
   }
 
-  const failingOrigins = [
+  for (const origin of [
     'http://hacker',
     'http://localhost:4001',
     'https://immediate.co.uk',
-  ];
-
-  for (const origin of failingOrigins) {
+  ]) {
     it(`disallows ${origin}`, () => {
-      expect(isOriginAllowed(origin)).toBe(false);
+      assert.equal(isOriginAllowed(origin), false);
     });
   }
+
+  it('adds comma-separated origins from configuration', () => {
+    const origins = getAllowedOrigins(
+      'https://preview.example.com, https://production.example.com',
+    );
+
+    assert.equal(origins.includes('https://preview.example.com'), true);
+    assert.equal(origins.includes('https://production.example.com'), true);
+    assert.equal(origins.includes('http://localhost'), true);
+  });
 });
