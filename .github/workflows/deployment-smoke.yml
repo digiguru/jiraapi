@@ -1,0 +1,27 @@
+name: Deployment smoke
+
+on:
+  deployment_status:
+
+permissions:
+  contents: read
+
+jobs:
+  smoke:
+    if: >-
+      github.event.deployment_status.state == 'success' &&
+      (github.event.deployment_status.environment_url != '' || github.event.deployment_status.target_url != '')
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      DEPLOYMENT_URL: ${{ github.event.deployment_status.environment_url || github.event.deployment_status.target_url }}
+
+    steps:
+      - name: Smoke test deployed API
+        run: |
+          echo "Checking $DEPLOYMENT_URL"
+          curl --fail --silent --show-error \
+            --retry 12 \
+            --retry-all-errors \
+            --retry-delay 5 \
+            "$DEPLOYMENT_URL/" >/dev/null
