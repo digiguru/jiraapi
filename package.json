@@ -1,5 +1,5 @@
 {
-  "name": "tdd-workshop",
+  "name": "jiraapi",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -8,8 +8,8 @@
     "request": "^2.88.2"
   },
   "engines": {
-    "node": "10.4.1",
-    "npm": "6.1.0"
+    "node": ">=20 <25",
+    "npm": ">=10"
   },
   "jest": {
     "verbose": true,
@@ -25,11 +25,13 @@
     }
   },
   "scripts": {
-    "start": "node --experimental-modules src/server.mjs",
-    "server": "node --experimental-modules src/server.mjs",
-    "server-watch": "nodemon -e mjs,js --experimental-modules src/server.mjs",
-    "test:ci": "jest --ci --reporters=jest-junit",
-    "test": "jest"
+    "start": "node src/server.mjs",
+    "server": "node src/server.mjs",
+    "server-watch": "nodemon -e mjs,js src/server.mjs",
+    "lint": "eslint src scripts",
+    "build": "node scripts/build-check.mjs",
+    "test:ci": "jest --ci --runInBand --reporters=default --reporters=jest-junit",
+    "test": "jest --runInBand"
   },
   "jest-junit": {
     "outputDirectory": "results"
@@ -39,6 +41,7 @@
     "babel-core": "^6.26.3",
     "babel-jest": "^29.7.0",
     "babel-preset-env": "^1.7.0",
+    "eslint": "^10.8.0",
     "jest": "^29.7.0",
     "jest-junit": "^16.0.0",
     "path": "^0.12.7",
