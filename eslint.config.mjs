@@ -20,14 +20,14 @@ export default [
       'no-unreachable': 'error',
       'no-constant-condition': 'error',
       'no-duplicate-imports': 'error',
-      'eqeqeq': ['error', 'always'],
-      'curly': ['error', 'all'],
+      eqeqeq: ['error', 'always'],
+      curly: ['error', 'all'],
       'no-var': 'error',
       'prefer-const': 'error',
     },
   },
   {
-    files: ['**/*.test.js'],
+    files: ['**/*.test.{js,mjs}'],
     languageOptions: {
       globals: {
         describe: 'readonly',
