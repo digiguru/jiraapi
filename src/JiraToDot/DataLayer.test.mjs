@@ -1,4 +1,5 @@
-import { jest } from '@jest/globals';
+import assert from 'node:assert/strict';
+import { describe, it } from 'node:test';
 import { DataLayer } from './DataLayer.mjs';
 
 const expectedFields = {
@@ -6,78 +7,82 @@ const expectedFields = {
 };
 
 function createDataLayer() {
-  const dataLayer = new DataLayer({
-    username: 'test@example.com',
-    password: 'test-token',
-  });
-  dataLayer.jira.searchJira = jest.fn().mockResolvedValue({ issues: [] });
-  return dataLayer;
+  const calls = [];
+  const jiraClient = {
+    async searchJira(...args) {
+      calls.push(args);
+      return { issues: [] };
+    },
+  };
+
+  return {
+    calls,
+    dataLayer: new DataLayer(
+      {
+        username: 'test@example.com',
+        password: 'test-token',
+      },
+      { jiraClient },
+    ),
+  };
+}
+
+function assertSingleSearch(calls, expectedJql) {
+  assert.deepEqual(calls, [[expectedJql, expectedFields]]);
 }
 
 describe('DataLayer', () => {
   it('builds the current sprint query for a team', async () => {
-    const dataLayer = createDataLayer();
-
+    const { calls, dataLayer } = createDataLayer();
     await dataLayer.currentSprintForTeam('Platform');
-
-    expect(dataLayer.jira.searchJira).toHaveBeenCalledWith(
+    assertSingleSearch(
+      calls,
       'cf[13100] in (Platform) and Sprint in openSprints() and type in standardIssueTypes()',
-      expectedFields,
     );
   });
 
   it('builds the current sprint query for a project', async () => {
-    const dataLayer = createDataLayer();
-
+    const { calls, dataLayer } = createDataLayer();
     await dataLayer.currentSprintForProject('WED');
-
-    expect(dataLayer.jira.searchJira).toHaveBeenCalledWith(
+    assertSingleSearch(
+      calls,
       'project in (WED) and Sprint in openSprints() and type in standardIssueTypes()',
-      expectedFields,
     );
   });
 
   it('builds the version query', async () => {
-    const dataLayer = createDataLayer();
-
+    const { calls, dataLayer } = createDataLayer();
     await dataLayer.version('Release-1');
-
-    expect(dataLayer.jira.searchJira).toHaveBeenCalledWith(
+    assertSingleSearch(
+      calls,
       "'fixVersions' in (Release-1) and type in standardIssueTypes()",
-      expectedFields,
     );
   });
 
   it('builds the sprint query', async () => {
-    const dataLayer = createDataLayer();
-
+    const { calls, dataLayer } = createDataLayer();
     await dataLayer.sprint('123');
-
-    expect(dataLayer.jira.searchJira).toHaveBeenCalledWith(
+    assertSingleSearch(
+      calls,
       'Sprint in (123) and type in standardIssueTypes()',
-      expectedFields,
     );
   });
 
   it('builds the epic query', async () => {
-    const dataLayer = createDataLayer();
-
+    const { calls, dataLayer } = createDataLayer();
     await dataLayer.epic('EPIC-42');
-
-    expect(dataLayer.jira.searchJira).toHaveBeenCalledWith(
+    assertSingleSearch(
+      calls,
       'cf[11100] in (EPIC-42) and type in standardIssueTypes()',
-      expectedFields,
     );
   });
 
   it('loads the example through the project query', async () => {
-    const dataLayer = createDataLayer();
-
+    const { calls, dataLayer } = createDataLayer();
     await dataLayer.loadExample();
-
-    expect(dataLayer.jira.searchJira).toHaveBeenCalledWith(
+    assertSingleSearch(
+      calls,
       'project in (WED) and Sprint in openSprints() and type in standardIssueTypes()',
-      expectedFields,
     );
   });
 });
