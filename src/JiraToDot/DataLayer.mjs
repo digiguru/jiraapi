@@ -1,54 +1,61 @@
-import JiraApi from 'jira-client';
+import { JiraSearchClient } from './JiraSearchClient.mjs';
+
+export const DEFAULT_JIRA_HOST = 'immediateco.atlassian.net';
 
 export class DataLayer {
-  constructor(login) {
-    this.jira = new JiraApi({
-      ...login,
-      protocol: 'https',
-      host: 'immediateco.atlassian.net',
-      apiVersion: '2',
-      strictSSL: true,
-    });
+  constructor(
+    login,
+    {
+      jiraClient,
+      jiraHost = process.env.JIRA_HOST || DEFAULT_JIRA_HOST,
+      apiVersion = process.env.JIRA_API_VERSION || '2',
+    } = {},
+  ) {
+    this.jira =
+      jiraClient ||
+      new JiraSearchClient({
+        ...login,
+        host: jiraHost,
+        apiVersion,
+      });
   }
 
-  async loadExample() {
+  loadExample() {
     return this.currentSprintForProject('WED');
   }
 
-  async currentSprintForTeam(team) {
-    return await this.search(
+  currentSprintForTeam(team) {
+    return this.search(
       `cf[13100] in (${team}) and Sprint in openSprints() and type in standardIssueTypes()`,
     );
   }
 
-  async currentSprintForProject(project) {
-    console.log(`project ${project} - load it.`);
-    return await this.search(
+  currentSprintForProject(project) {
+    return this.search(
       `project in (${project}) and Sprint in openSprints() and type in standardIssueTypes()`,
     );
   }
 
-  async version(version) {
-    return await this.search(
+  version(version) {
+    return this.search(
       `'fixVersions' in (${version}) and type in standardIssueTypes()`,
     );
   }
 
-  async sprint(sprint) {
-    return await this.search(
+  sprint(sprint) {
+    return this.search(
       `Sprint in (${sprint}) and type in standardIssueTypes()`,
     );
   }
 
-  async epic(epic) {
-    return await this.search(
+  epic(epic) {
+    return this.search(
       `cf[11100] in (${epic}) and type in standardIssueTypes()`,
     );
   }
 
-  async search(jql) {
-    console.log(jql);
-    return await this.jira.searchJira(jql, {
+  search(jql) {
+    return this.jira.searchJira(jql, {
       fields: ['*all', 'customfield_11100'],
     });
   }
