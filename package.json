@@ -19,6 +19,6 @@
     "test": "node --test"
   },
   "devDependencies": {
-    "eslint": "^10.8.0"
+    "eslint": "^10.9.1"
   }
 }
